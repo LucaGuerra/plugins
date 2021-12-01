@@ -59,7 +59,7 @@ const (
 )
 
 const defaultS3DownloadConcurrency = 1
-const verbose bool = true
+const verbose bool = false
 
 func min(a, b int) int {
 	if a < b {
@@ -141,7 +141,7 @@ func init() {
 }
 
 func (p *pluginContext) Info() *plugins.Info {
-	log.Printf("[%s] Info\n", PluginName)
+	// log.Printf("[%s] Info\n", PluginName)
 	return &plugins.Info{
 		ID:                  PluginID,
 		Name:                PluginName,
@@ -164,7 +164,7 @@ func (p *pluginContext) Init(cfg string) error {
 	p.jdataEvtnum = math.MaxUint64
 	p.sqsDelete = true
 	p.s3DownloadConcurrency = defaultS3DownloadConcurrency
-	p.useAsync = false
+	p.useAsync = true
 
 	if cfg != "" {
 		var initConfig pluginInitConfig
@@ -308,7 +308,7 @@ func (p *pluginContext) String(in io.ReadSeeker) (string, error) {
 }
 
 func (p *pluginContext) Fields() []sdk.FieldEntry {
-	log.Printf("[%s] Fields\n", PluginName)
+	// log.Printf("[%s] Fields\n", PluginName)
 
 	return supportedFields
 }
