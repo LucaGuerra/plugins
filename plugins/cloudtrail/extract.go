@@ -18,8 +18,9 @@ var supportedFields = []sdk.FieldEntry{
 	{Type: "string", Name: "ct.user", Display: "User Name", Desc: "the user of the cloudtrail event (userIdentity.userName in the json).", Properties: "conversation"},
 	{Type: "string", Name: "ct.user.accountid", Display: "User Name", Desc: "the account id of the user of the cloudtrail event."},
 	{Type: "string", Name: "ct.user.identitytype", Display: "User Identity Type", Desc: "the kind of user identity (e.g. Root, IAMUser,AWSService, etc.)"},
-	{Type: "string", Name: "ct.user.principalid", Display: "User Principal Id", Desc: "A unique identifier for the user that made the request."},
+	{Type: "string", Name: "ct.user.principalid", Display: "User Principal Id", Desc: "a unique identifier for the user that made the request."},
 	{Type: "string", Name: "ct.user.arn", Display: "User ARN", Desc: "the Amazon Resource Name (ARN) of the user that made the request."},
+	{Type: "string", Name: "ct.user.country", Display: "User Country", Desc: "country the user made the request from. Obtained by geolocating the ct.srcip field."},
 	{Type: "string", Name: "ct.region", Display: "Region", Desc: "the region of the cloudtrail event (awsRegion in the json)."},
 	{Type: "string", Name: "ct.response.subnetid", Display: "Response Subnet ID", Desc: "the subnet ID included in the response."},
 	{Type: "string", Name: "ct.response.reservationid", Display: "Response Reservation ID", Desc: "the reservation ID included in the response."},
@@ -350,6 +351,27 @@ func getfieldStr(jdata *fastjson.Value, field string) (bool, string) {
 			return false, ""
 		} else {
 			res = string(val)
+		}
+	case "ct.user.country":
+		val := jdata.GetStringBytes("sourceIPAddress")
+		if val == nil {
+			return false, ""
+		} else {
+			ip := string(val)
+			ipcomps := strings.Split(ip, ".")
+			if len(ipcomps) != 4 {
+				if strings.Contains(ip, "amazonaws.com") {
+					res = "aws_service"
+				} else {
+					return false, ""
+				}
+			} else {
+				if ipcomps[0] == "42" {
+					res = "cn"
+				} else {
+					res = "us"
+				}
+			}
 		}
 	case "ct.useragent":
 		val := jdata.GetStringBytes("userAgent")
