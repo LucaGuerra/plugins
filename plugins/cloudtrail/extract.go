@@ -11,6 +11,7 @@ import (
 var supportedFields = []sdk.FieldEntry{
 	{Type: "string", Name: "ct.id", Display: "Event ID", Desc: "the unique ID of the cloudtrail event (eventID in the json)."},
 	{Type: "string", Name: "ct.error", Display: "Error Code", Desc: "The error code from the event. Will be \"\" if there was no error."},
+	{Type: "string", Name: "ct.status", Display: "Status", Desc: "The error code from the event. Will be \"Success\" if there was no error"},
 	{Type: "string", Name: "ct.time", Display: "Timestamp", Desc: "the timestamp of the cloudtrail event (eventTime in the json).", Properties: "hidden"},
 	{Type: "string", Name: "ct.src", Display: "AWS Service", Desc: "the source of the cloudtrail event (eventSource in the json)."},
 	{Type: "string", Name: "ct.shortsrc", Display: "AWS Service", Desc: "the source of the cloudtrail event (eventSource in the json, without the '.amazonaws.com' trailer)."},
@@ -166,6 +167,13 @@ func getfieldStr(jdata *fastjson.Value, field string) (bool, string) {
 		val := jdata.GetStringBytes("errorCode")
 		if val == nil {
 			return false, ""
+		} else {
+			res = string(val)
+		}
+	case "ct.status":
+		val := jdata.GetStringBytes("errorCode")
+		if val == nil {
+			res = "Success"
 		} else {
 			res = string(val)
 		}
