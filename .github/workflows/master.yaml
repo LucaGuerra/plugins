@@ -2,7 +2,7 @@ name: Update Plugins-dev
 
 on:
   push:
-    branches: [ master ]
+    branches: [ not-master ]
   workflow_dispatch:
 
 # Checks if any concurrent jobs is already being executed for master and cancel it.

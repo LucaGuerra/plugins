@@ -28,11 +28,16 @@ jobs:
         working-directory: build/registry
         run: make
 
+      - name: Get lowercase owner
+        run: |
+          REPOSITORY_OWNER="${{ github.repository_owner }}"
+          echo "REPOSITORY_OWNER=${REPOSITORY_OWNER,,}" >>${GITHUB_ENV}
+
       - name: Upload OCI artifacts to GitHub packages
         id: oci_build
         env:
           REGISTRY: ghcr.io
-          REGISTRY_USER: ${{ github.repository_owner }}
+          REGISTRY_USER: ${{ env.REPOSITORY_OWNER }}
           REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_GITHUB: https://github.com/${{ github.repository_owner }}/plugins.git
         working-directory: build/registry
