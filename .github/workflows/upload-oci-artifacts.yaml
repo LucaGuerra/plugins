@@ -28,11 +28,15 @@ jobs:
         working-directory: build/registry
         run: make
 
+      - name: Get lowercase repository owner
+        run: |
+          echo "REPOSITORY_OWNER=${GITHUB_REPOSITORY_OWNER,,}" >>${GITHUB_ENV}
+
       - name: Upload OCI artifacts to GitHub packages
         id: oci_build
         env:
           REGISTRY: ghcr.io
-          REGISTRY_USER: ${{ github.repository_owner }}
+          REGISTRY_USER: ${{ env.REPOSITORY_OWNER }}
           REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_GITHUB: https://github.com/${{ github.repository_owner }}/plugins.git
         working-directory: build/registry
@@ -66,7 +70,7 @@ jobs:
         uses: docker/login-action@master
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ env.REPOSITORY_OWNER }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sign the artifacts with GitHub OIDC Token
