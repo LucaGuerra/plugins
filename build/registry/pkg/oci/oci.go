@@ -160,12 +160,12 @@ func latestVersionArtifact(ctx context.Context, ref string, ociClient remote.Cli
 		versions = append(versions, parsedVersion)
 	}
 
-	klog.Infof("versions before sorting: %q", versions)
+	klog.Infof("remote versions before sorting: %q", versions)
 
 	// Sort the versions.
 	semver.Sort(versions)
 
-	klog.Infof("versions after sorting: %q", versions)
+	klog.Infof("remote versions after sorting: %q", versions)
 
 	// Return the latest version.
 	// It should never happen that versions is empty. Since the artifacts are pushed by the CI if
@@ -236,6 +236,8 @@ func newReleases(artifactName, remoteVersion string) ([]semver.Version, error) {
 		return nil, err
 	}
 
+	klog.Infof("newReleases tags: %q", tags)
+
 	// Since the remoteTag is always self-contained, we remove it.
 	tags = tags[1:]
 
@@ -260,6 +262,7 @@ func newReleases(artifactName, remoteVersion string) ([]semver.Version, error) {
 		versions = append(versions, parsedVersion)
 	}
 
+	klog.Infof("versions before sorting: %q", versions)
 	// Sort and return the versions.
 	semver.Sort(versions)
 	return versions, nil
