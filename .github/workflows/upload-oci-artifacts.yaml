@@ -66,6 +66,10 @@ jobs:
           cosign-release: 'v2.1.0'
       - run: cosign version
 
+      - name: Get lowercase repository owner
+        run: |
+          echo "REPOSITORY_OWNER=${GITHUB_REPOSITORY_OWNER,,}" >>${GITHUB_ENV}
+
       - name: Log into ghcr.io
         uses: docker/login-action@master
         with:
