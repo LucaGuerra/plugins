@@ -160,8 +160,12 @@ func latestVersionArtifact(ctx context.Context, ref string, ociClient remote.Cli
 		versions = append(versions, parsedVersion)
 	}
 
+	klog.Infof("versions before sorting: %q", versions)
+
 	// Sort the versions.
 	semver.Sort(versions)
+
+	klog.Infof("versions after sorting: %q", versions)
 
 	// Return the latest version.
 	// It should never happen that versions is empty. Since the artifacts are pushed by the CI if
